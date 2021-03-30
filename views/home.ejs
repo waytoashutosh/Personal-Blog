@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+
+    <h1>Home</h1>
+    <p><%= startContent %></p>
+
+    <br>
+
+    <% contentArray.forEach(function (myobj) {%>
+        <h1><%=myobj.Title%></h1>
+        <p><%=myobj.Content%></p>
+    <%})%>
+
+<%- include('partials/footer') %>

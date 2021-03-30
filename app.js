@@ -19,14 +19,38 @@ app.use(express.static("public"));
 
 
 app.get("/", function(req, res){
-  res.render("home");
+
+  res.render("home",{startContent:homeStartingContent, contentArray:blogArray});
+
+})
+
+app.get("/about", function(req, res){
+  res.render("about",{startAboutContent:aboutContent});
+
+})
+app.get("/contact", function(req, res){
+  res.render("contact",{startContactContent:contactContent});
+
+})
+app.get("/compose", function(req, res){
+  res.render("compose");
 })
 
 
+// creating object to store the content
+var blogContentObj={Title:"", Content:""};
+var blogArray=[]
 
+app.post("/compose", function(req,res){
+  console.log(req.body);
 
+  blogContentObj.Title=req.body.postName;
+  blogContentObj.Content=req.body.postBody;
+  blogArray.push(blogContentObj);
 
-
+  console.log(blogArray);
+  res.redirect("/");
+})
 
 
 app.listen(3000, function() {
