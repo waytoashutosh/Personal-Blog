@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+const _ = require('lodash');
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -16,11 +16,15 @@ app.use(express.static("public"));
 
 
 
-
+// creating object to store the content
+var blogContentObj={Title:"", Content:""};
+var blogArray=[]
 
 app.get("/", function(req, res){
 
+  
   res.render("home",{startContent:homeStartingContent, contentArray:blogArray});
+  
 
 })
 
@@ -35,20 +39,48 @@ app.get("/contact", function(req, res){
 app.get("/compose", function(req, res){
   res.render("compose");
 })
+app.get('/compose/:Id', function (req, res) {
+
+  res.render("home",{startContent:homeStartingContent, contentArray:blogArray});
+})
 
 
-// creating object to store the content
-var blogContentObj={Title:"", Content:""};
-var blogArray=[]
 
+
+
+app.get('/posts/:pName', function(req,res){
+ 
+
+  let temp = false;
+  let t1 = _.lowerCase(req.params.pName);
+
+  blogArray.forEach(function(myobj){
+    if(_.lowerCase(myobj.Title) === t1){
+  
+      res.render("post",{obj:myobj});
+      temp=true;
+      
+    }
+
+  })
+  if(temp===false){
+    console.log("No Match Found");
+  }
+
+})
 app.post("/compose", function(req,res){
-  console.log(req.body);
 
-  blogContentObj.Title=req.body.postName;
-  blogContentObj.Content=req.body.postBody;
-  blogArray.push(blogContentObj);
-
+  console.log("Before push");
   console.log(blogArray);
+
+
+
+  blogArray.push({Title:req.body.postName,Content:req.body.postBody});
+
+  console.log("After Push");
+  console.log(blogArray);
+
+
   res.redirect("/");
 })
 
